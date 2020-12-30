@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./TinderCards.css";
 import TinderCard from "react-tinder-card";
-import { SwipeableDrawer } from "@material-ui/core";
+import axios from "./axios"
 
 function TinderCards() {
-  const [people, usePeople] = useState([
-    {
-      name: "Name Surname1",
-      url: "https://homepages.cae.wisc.edu/~ece533/images/girl.png",
-    },
-    {
-      name: "Name Surname2",
-      url: "https://homepages.cae.wisc.edu/~ece533/images/lena.png",
-    },
-  ]);
+  const [people, setPeople] = useState([]);
+
+  useEffect(() => {
+    async function fetchData(){
+      const req = await axios.get("/tinder/cards")
+
+      setPeople(req.data)
+    }
+
+      fetchData();
+  }, []);
 
   const swiped = (direction, nameToDelete) => {
     console.log("removing", +nameToDelete);
@@ -36,7 +37,7 @@ function TinderCards() {
             onCardLeftScreen={() => outOfFrame(person.name)}
           >
             <div
-              style={{ backgroundImage: `url(${person.url})` }}
+              style={{ backgroundImage: `url(${person.imgUrl})` }}
               className="card"
             >
               <h3>{person.name}</h3>
